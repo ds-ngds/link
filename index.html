@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sunburst – Modelo de Gobernanza IAD</title>
+
+  <!-- Highcharts -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/sunburst.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #container {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+
+  <script>
+    const data = [
+      { id: 'iad', parent: '', name: 'Plataforma Digital IAD' },
+
+      { id: 'gov', parent: 'iad', name: 'Gobernanza' },
+      { id: 'ops', parent: 'iad', name: 'Operación' },
+      { id: 'evo', parent: 'iad', name: 'Evolución' },
+
+      { id: 'gov_pc', parent: 'gov', name: 'Propiedad y Control' },
+      { id: 'gov_de', parent: 'gov', name: 'Decisiones Estratégicas' },
+      { id: 'gov_sc', parent: 'gov', name: 'Seguridad y Cumplimiento' },
+      { id: 'gov_gp', parent: 'gov', name: 'Gestión de Proveedores' },
+
+      { id: 'gov_pc_tit', parent: 'gov_pc', name: 'Titularidad de la plataforma', value: 1 },
+      { id: 'gov_pc_az', parent: 'gov_pc', name: 'Control de infraestructura Azure', value: 1 },
+      { id: 'gov_pc_data', parent: 'gov_pc', name: 'Custodia de datos', value: 1 },
+
+      { id: 'gov_de_roadmap', parent: 'gov_de', name: 'Priorización del roadmap', value: 1 },
+      { id: 'gov_de_changes', parent: 'gov_de', name: 'Aprobación de cambios', value: 1 },
+      { id: 'gov_de_scope', parent: 'gov_de', name: 'Definición de alcance', value: 1 },
+
+      { id: 'gov_sc_access', parent: 'gov_sc', name: 'Políticas de acceso', value: 1 },
+      { id: 'gov_sc_sec', parent: 'gov_sc', name: 'Lineamientos de seguridad', value: 1 },
+      { id: 'gov_sc_comp', parent: 'gov_sc', name: 'Cumplimiento normativo', value: 1 },
+
+      { id: 'gov_gp_ngds', parent: 'gov_gp', name: 'Relación con NGDS', value: 1 },
+      { id: 'gov_gp_perf', parent: 'gov_gp', name: 'Evaluación de desempeño', value: 1 },
+      { id: 'gov_gp_sla', parent: 'gov_gp', name: 'SLAs', value: 1 },
+
+      { id: 'ops_st', parent: 'ops', name: 'Soporte Técnico' },
+      { id: 'ops_mc', parent: 'ops', name: 'Monitoreo y Continuidad' },
+      { id: 'ops_gd', parent: 'ops', name: 'Gestión de Despliegues' },
+      { id: 'ops_mant', parent: 'ops', name: 'Mantenimiento' },
+
+      { id: 'ops_st_inc', parent: 'ops_st', name: 'Incidentes', value: 1 },
+      { id: 'ops_st_l23', parent: 'ops_st', name: 'Soporte L2 / L3', value: 1 },
+      { id: 'ops_st_prod', parent: 'ops_st', name: 'Errores productivos', value: 1 },
+
+      { id: 'ops_mc_avail', parent: 'ops_mc', name: 'Disponibilidad', value: 1 },
+      { id: 'ops_mc_logs', parent: 'ops_mc', name: 'Logs y métricas', value: 1 },
+      { id: 'ops_mc_alert', parent: 'ops_mc', name: 'Alertas', value: 1 },
+
+      { id: 'ops_gd_rel', parent: 'ops_gd', name: 'Releases', value: 1 },
+      { id: 'ops_gd_rb', parent: 'ops_gd', name: 'Rollback', value: 1 },
+      { id: 'ops_gd_ver', parent: 'ops_gd', name: 'Versionado', value: 1 },
+
+      { id: 'ops_mant_fix', parent: 'ops_mant', name: 'Correctivo', value: 1 },
+      { id: 'ops_mant_prev', parent: 'ops_mant', name: 'Preventivo', value: 1 },
+      { id: 'ops_mant_minor', parent: 'ops_mant', name: 'Actualizaciones menores', value: 1 },
+
+      { id: 'evo_mf', parent: 'evo', name: 'Mejoras Funcionales' },
+      { id: 'evo_ni', parent: 'evo', name: 'Nuevas Integraciones' },
+      { id: 'evo_ot', parent: 'evo', name: 'Optimización Técnica' },
+      { id: 'evo_pf', parent: 'evo', name: 'Planificación Futura' },
+
+      { id: 'evo_mf_new', parent: 'evo_mf', name: 'Nuevas funcionalidades', value: 1 },
+      { id: 'evo_mf_opt', parent: 'evo_mf', name: 'Optimización de flujos', value: 1 },
+
+      { id: 'evo_ni_ext', parent: 'evo_ni', name: 'Servicios externos', value: 1 },
+      { id: 'evo_ni_chan', parent: 'evo_ni', name: 'Canales adicionales', value: 1 },
+
+      { id: 'evo_ot_perf', parent: 'evo_ot', name: 'Performance', value: 1 },
+      { id: 'evo_ot_cost', parent: 'evo_ot', name: 'Costos', value: 1 },
+      { id: 'evo_ot_scale', parent: 'evo_ot', name: 'Escalabilidad', value: 1 },
+
+      { id: 'evo_pf_rt', parent: 'evo_pf', name: 'Roadmap tecnológico', value: 1 },
+      { id: 'evo_pf_biz', parent: 'evo_pf', name: 'Alineación negocio', value: 1 },
+      { id: 'evo_pf_growth', parent: 'evo_pf', name: 'Crecimiento', value: 1 }
+    ];
+
+    Highcharts.chart('container', {
+      chart: {
+        backgroundColor: '#ffffff'
+      },
+
+      title: {
+        text: 'Modelo de Gobernanza – Plataforma Digital IAD',
+        style: { color: '#374151' }
+      },
+
+      subtitle: {
+        text: 'Gobernanza • Operación • Evolución',
+        style: { color: '#6b7280' }
+      },
+
+      series: [{
+        type: 'sunburst',
+        data,
+        name: 'Plataforma Digital IAD',
+        allowTraversingTree: true,
+        borderRadius: 4,
+
+        // Gris base
+        color: '#4b5563',
+
+        dataLabels: {
+          format: '{point.name}',
+          style: {
+            textOutline: 'none',
+            fontSize: '11px',
+            color: '#111827'
+          },
+          filter: {
+            property: 'innerArcLength',
+            operator: '>',
+            value: 12
+          }
+        },
+
+        levels: [{
+          level: 1,
+          levelIsConstant: false,
+          dataLabels: {
+            style: {
+              fontWeight: '700',
+              color: '#ffffff'
+            }
+          }
+        }, {
+          level: 2,
+          colorVariation: {
+            key: 'brightness',
+            to: -0.15
+          }
+        }, {
+          level: 3,
+          colorVariation: {
+            key: 'brightness',
+            to: 0.15
+          }
+        }, {
+          level: 4,
+          colorVariation: {
+            key: 'brightness',
+            to: 0.35
+          }
+        }]
+      }],
+
+      tooltip: {
+        backgroundColor: '#ffffff',
+        borderColor: '#9ca3af',
+        style: { color: '#111827' },
+        headerFormat: '',
+        pointFormat:
+          '<b>{point.name}</b><br/>' +
+          'Nivel: <b>{point.node.level}</b>'
+      }
+    });
+  </script>
+</body>
+</html>
